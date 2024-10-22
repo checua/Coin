@@ -1,4 +1,6 @@
-﻿namespace Coin.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Coin.Models
 {
     public class Usuario
     {
@@ -8,7 +10,7 @@
         public string Telefono { get; set; }
         public string CuentaCLABE { get; set; }
         public string ContrasenaHash { get; set; }
-        public DateTime FechaRegistro { get; set; }
+        public DateTime FechaRegistro { get; set; } = DateTime.Now;
         public decimal SaldoDisponible { get; set; }
     }
 }

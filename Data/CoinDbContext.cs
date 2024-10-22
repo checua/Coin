@@ -14,10 +14,10 @@ namespace Coin.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Usuario>().ToTable("COIN_Usuarios");
-            modelBuilder.Entity<CuentaInterna>().ToTable("COIN_CuentasInternas");
-            modelBuilder.Entity<Apuesta>().ToTable("COIN_Apuestas");
-            modelBuilder.Entity<Transaccion>().ToTable("COIN_Transacciones");
+            modelBuilder.Entity<Usuario>().ToTable("COIN_Usuarios").HasKey(u => u.IdUsuario);
+            modelBuilder.Entity<CuentaInterna>().ToTable("COIN_CuentasInternas").HasKey(c => c.IdCuenta);
+            modelBuilder.Entity<Apuesta>().ToTable("COIN_Apuestas").HasKey(a => a.IdApuesta);
+            modelBuilder.Entity<Transaccion>().ToTable("COIN_Transacciones").HasKey(t => t.IdTransaccion);
         }
     }
 }
