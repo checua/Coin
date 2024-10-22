@@ -1,5 +1,6 @@
 ﻿using Coin.Data;
 using Coin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,9 +39,16 @@ namespace Coin.Controllers
         }
 
         // POST: api/apuestas
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Apuesta>> PostApuesta(Apuesta apuesta)
         {
+            // Validar que el usuario autenticado esté relacionado con la apuesta
+            if (User.Identity.Name != apuesta.IdJugador1.ToString() && !User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
             _context.COIN_Apuestas.Add(apuesta);
             await _context.SaveChangesAsync();
 
@@ -78,6 +86,7 @@ namespace Coin.Controllers
         }
 
         // DELETE: api/apuestas/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteApuesta(int id)
         {

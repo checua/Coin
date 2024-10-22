@@ -1,5 +1,6 @@
 ﻿using Coin.Data;
 using Coin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace Coin.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsuariosController : ControllerBase
     {
         private readonly CoinDbContext _context;
@@ -17,6 +19,7 @@ namespace Coin.Controllers
         }
 
         // GET: api/usuarios
+        [Authorize] // Todos los usuarios autenticados pueden acceder
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
@@ -38,6 +41,7 @@ namespace Coin.Controllers
         }
 
         // POST: api/usuarios
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
         {
@@ -48,6 +52,7 @@ namespace Coin.Controllers
         }
 
         // PUT: api/usuarios/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
@@ -78,6 +83,7 @@ namespace Coin.Controllers
         }
 
         // DELETE: api/usuarios/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {

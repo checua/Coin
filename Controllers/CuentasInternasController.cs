@@ -1,5 +1,6 @@
 ﻿using Coin.Data;
 using Coin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace Coin.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CuentasInternasController : ControllerBase
     {
         private readonly CoinDbContext _context;
@@ -24,6 +26,7 @@ namespace Coin.Controllers
         }
 
         // GET: api/cuentasinternas/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<CuentaInterna>> GetCuentaInterna(int id)
         {
@@ -34,11 +37,18 @@ namespace Coin.Controllers
                 return NotFound();
             }
 
+            // Solo permitir al usuario autenticado ver su propia cuenta
+            if (User.Identity.Name != cuentaInterna.IdUsuario.ToString() && !User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
             return cuentaInterna;
         }
 
         // POST: api/cuentasinternas
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult<CuentaInterna>> PostCuentaInterna(CuentaInterna cuentaInterna)
         {
             _context.COIN_CuentasInternas.Add(cuentaInterna);
@@ -48,6 +58,7 @@ namespace Coin.Controllers
         }
 
         // PUT: api/cuentasinternas/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCuentaInterna(int id, CuentaInterna cuentaInterna)
         {
@@ -78,6 +89,7 @@ namespace Coin.Controllers
         }
 
         // DELETE: api/cuentasinternas/5
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCuentaInterna(int id)
         {

@@ -12,5 +12,7 @@ namespace Coin.Models
         public string ContrasenaHash { get; set; }
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
         public decimal SaldoDisponible { get; set; }
+        public string Rol { get; set; }  // Puede ser "Admin" o "User"
     }
+
 }

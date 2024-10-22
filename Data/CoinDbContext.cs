@@ -1,5 +1,8 @@
-﻿using Coin.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Coin.Models;
 
 namespace Coin.Data
 {
