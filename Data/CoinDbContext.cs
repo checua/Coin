@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Coin.Models;
 
 namespace Coin.Data
@@ -14,6 +11,7 @@ namespace Coin.Data
         public DbSet<CuentaInterna> COIN_CuentasInternas { get; set; }
         public DbSet<Apuesta> COIN_Apuestas { get; set; }
         public DbSet<Transaccion> COIN_Transacciones { get; set; }
+        public DbSet<Sistema> COIN_Sistema { get; set; } // Registrar el modelo
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +19,7 @@ namespace Coin.Data
             modelBuilder.Entity<CuentaInterna>().ToTable("COIN_CuentasInternas").HasKey(c => c.IdCuenta);
             modelBuilder.Entity<Apuesta>().ToTable("COIN_Apuestas").HasKey(a => a.IdApuesta);
             modelBuilder.Entity<Transaccion>().ToTable("COIN_Transacciones").HasKey(t => t.IdTransaccion);
+            modelBuilder.Entity<Sistema>().ToTable("COIN_Sistema").HasKey(s => s.IdTransaccion); // Relacionar modelo con tabla
         }
     }
 }
