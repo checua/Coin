@@ -136,6 +136,9 @@ namespace Coin.Controllers
             // Actualizar el campo "Ganador" en la apuesta
             apuesta.Ganador = ganador;
 
+            // Definir el valor del campo "Resultado"
+            apuesta.Resultado = (ganador == apuesta.IdJugador1) ? "Jugador 1" : "Jugador 2";
+
             // Realizar la transferencia de fondos
             var jugador1 = await _context.COIN_Usuarios.FindAsync(apuesta.IdJugador1);
             var jugador2 = await _context.COIN_Usuarios.FindAsync(apuesta.IdJugador2);
@@ -155,7 +158,7 @@ namespace Coin.Controllers
             decimal comision = apuesta.MontoApostado * 0.05m;
             decimal montoGanancia = apuesta.MontoApostado - comision;
 
-            // Transferir el monto de la comisión al sistema y la ganancia al ganador
+            // Transferir el monto de la comisión al ganador
             if (ganador == apuesta.IdJugador1)
             {
                 jugador1.SaldoDisponible += montoGanancia + apuesta.MontoApostado;
@@ -192,11 +195,8 @@ namespace Coin.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { ganador, comision, montoGanancia });
+            return Ok(new { ganador, resultado = apuesta.Resultado, comision, montoGanancia });
         }
-
-
-
 
 
         private bool ApuestaExists(int id)
