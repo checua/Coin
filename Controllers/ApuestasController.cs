@@ -154,11 +154,11 @@ namespace Coin.Controllers
                 return BadRequest("Uno o ambos jugadores no tienen suficiente saldo para completar la apuesta.");
             }
 
-            // Calcular la comisión del 5%
+            // Calcular la comisión del 5% sobre la ganancia neta del ganador
             decimal comision = apuesta.MontoApostado * 0.05m;
             decimal montoGanancia = apuesta.MontoApostado - comision;
 
-            // Transferir el monto de la comisión al ganador
+            // Transferir el monto de la ganancia neta menos la comisión al ganador
             if (ganador == apuesta.IdJugador1)
             {
                 jugador1.SaldoDisponible += montoGanancia + apuesta.MontoApostado;
@@ -197,6 +197,7 @@ namespace Coin.Controllers
 
             return Ok(new { ganador, resultado = apuesta.Resultado, comision, montoGanancia });
         }
+
 
 
         private bool ApuestaExists(int id)
