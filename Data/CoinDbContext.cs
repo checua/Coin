@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Coin.Models;
 
 namespace Coin.Data
 {
-    public class CoinDbContext : DbContext
+    public class CoinDbContext : IdentityDbContext<Usuario>
     {
         public CoinDbContext(DbContextOptions<CoinDbContext> options) : base(options) { }
 
@@ -15,7 +17,9 @@ namespace Coin.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Usuario>().ToTable("COIN_Usuarios").HasKey(u => u.IdUsuario);
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Usuario>().ToTable("COIN_Usuarios").HasKey(u => u.Id);
             modelBuilder.Entity<CuentaInterna>().ToTable("COIN_CuentasInternas").HasKey(c => c.IdCuenta);
             modelBuilder.Entity<Apuesta>().ToTable("COIN_Apuestas").HasKey(a => a.IdApuesta);
             modelBuilder.Entity<Transaccion>().ToTable("COIN_Transacciones").HasKey(t => t.IdTransaccion);

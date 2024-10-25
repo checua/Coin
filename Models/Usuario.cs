@@ -1,18 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace Coin.Models
 {
-    public class Usuario
+    public class Usuario : IdentityUser
     {
-        public int IdUsuario { get; set; }
+        [Required]
+        [MaxLength(50)]
         public string NickName { get; set; }
-        public string Correo { get; set; }
-        public string Telefono { get; set; }
-        public string CuentaCLABE { get; set; }
-        public string ContrasenaHash { get; set; }
-        public DateTime FechaRegistro { get; set; } = DateTime.Now;
-        public decimal SaldoDisponible { get; set; }
-        public string Rol { get; set; }  // Puede ser "Admin" o "User"
-    }
 
+        [MaxLength(15)]
+        public string Telefono { get; set; }
+
+        [MaxLength(18)]
+        public string CuentaCLABE { get; set; }
+
+        [Required]
+        public decimal SaldoDisponible { get; set; }
+
+        [MaxLength(50)]
+        public string Rol { get; set; } // Puede ser "Admin" o "User"
+
+        [Required]
+        public DateTime FechaRegistro { get; set; } = DateTime.Now;
+    }
 }
