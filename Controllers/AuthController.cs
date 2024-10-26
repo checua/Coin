@@ -7,8 +7,8 @@ using Coin.Models;
 using Coin.Data;  // Necesario para CoinDbContext
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using BCrypt.Net;
+
 
 namespace Coin.Controllers
 {
@@ -25,18 +25,17 @@ namespace Coin.Controllers
             _context = context;
         }
 
-
-
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest loginData)
         {
             // Buscar el usuario en la base de datos
-            var usuario = _context.COIN_Usuarios.FirstOrDefault(u => u.Correo == loginData.Correo && u.ContrasenaHash == loginData.ContrasenaHash);
+            var usuario = _context.Users.FirstOrDefault(u => u.Email == loginData.Email);
 
-            if (usuario == null)
+            if (usuario == null || !BCrypt.Net.BCrypt.Verify(loginData.Password, usuario.PasswordHash))
             {
                 return Unauthorized();
             }
+
 
             var token = GenerateJwtToken(usuario);
             return Ok(new { token });
@@ -49,10 +48,10 @@ namespace Coin.Controllers
 
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.Sub, usuario.IdUsuario.ToString()), // Usar IdUsuario como principal
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim(ClaimTypes.Role, usuario.Rol)  // Añadir el rol al token
-    };
+                new Claim(JwtRegisteredClaimNames.Sub, usuario.Id), // Usar Id como principal
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, usuario.Rol)  // Añadir el rol al token
+            };
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
@@ -63,6 +62,11 @@ namespace Coin.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+    }
 
+    public class LoginRequest
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }
